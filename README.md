@@ -338,5 +338,5 @@ MIT License
 
 ## 📮 联系方式
 
-- 作者: [你的名字]
-- 项目主页: [GitHub 链接]
+- 作者: Joeowo
+- 项目主页: https://github.com/Joeowo/Review-System-Skills
