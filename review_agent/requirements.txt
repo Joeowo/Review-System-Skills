@@ -1,0 +1,27 @@
+# Review Agent Dependencies
+
+# Core
+python-dotenv==1.0.0
+
+# LLM API
+openai==1.12.0  # For DeepSeek API (OpenAI-compatible)
+
+# Terminal UI
+rich==13.7.0
+questionary==2.0.1
+
+# Data processing
+python-dateutil==2.8.2
+
+# Markdown parsing
+markdown==3.5.2
+
+# Chinese text processing
+jieba==0.42.1
+
+# Async support
+aiohttp==3.9.1
+
+# Utilities
+pydantic==2.5.3
+pydantic-settings==2.1.0
