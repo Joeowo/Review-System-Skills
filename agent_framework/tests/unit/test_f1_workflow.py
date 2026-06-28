@@ -34,14 +34,13 @@ class TestF1WorkflowCreation:
     def test_f1_workflow_has_entry_point(self):
         """F1 workflow 应该有正确的入口点"""
         # Given: workflow 被创建
-        # workflow = create_f1_workflow()
+        workflow = create_f1_workflow()
 
         # When: 编译它
-        # app = workflow.compile()
+        app = workflow.compile()
 
         # Then: 应该可以获取入口点信息
-        # assert app is not None
-        pytest.skip("等待实现")
+        assert app is not None
 
     def test_f1_workflow_has_all_nodes(self):
         """F1 workflow 应该包含所有必需的节点"""
@@ -58,15 +57,18 @@ class TestF1WorkflowCreation:
         ]
 
         # Given: workflow 被创建
-        # workflow = create_f1_workflow()
+        workflow = create_f1_workflow()
 
         # When: 获取所有节点
-        # nodes = workflow.nodes
+        # LangGraph StateGraph 使用 builder
+        if hasattr(workflow, "builder"):
+            nodes = list(workflow.builder.nodes.keys())
+        else:
+            nodes = list(workflow.nodes.keys())
 
         # Then: 应该包含所有预期节点
-        # for node in expected_nodes:
-        #     assert node in nodes
-        pytest.skip("等待实现")
+        for node in expected_nodes:
+            assert node in nodes, f"节点 {node} 未找到"
 
 
 class TestResearchNode:
@@ -96,20 +98,34 @@ class TestResearchNode:
 
     def test_research_node_handles_error(self):
         """研究节点应该正确处理错误"""
+        from agent_framework.workflows import f1_learning_research
+        from agent_framework.workflows.f1_learning_research import research_node
+
         # Given: 状态和模拟错误
-        # state = {"topic": "测试主题", "current_step": "start"}
+        state = {"topic": "测试主题", "current_step": "start"}
 
-        # with patch("agent_framework.tools.autoresearch_tools.research_single_tool") as mock_tool:
-        #     mock_tool.invoke.side_effect = Exception("网络错误")
+        # Mock at the module level where it's used
+        original_tool = f1_learning_research.research_single_tool
 
-        #     # When: 执行研究节点
-        #     result = research_node(state)
+        # Create a mock that raises exception
+        mock_tool = MagicMock()
+        mock_tool.invoke.side_effect = Exception("网络错误")
 
-        #     # Then: 错误应该被捕获
-        #     assert result["current_step"] == "research_failed"
-        #     assert result["error_message"] is not None
+        # Replace the tool
+        f1_learning_research.research_single_tool = mock_tool
 
-        pytest.skip("等待实现 research_node")
+        try:
+            # When: 执行研究节点
+            result = research_node(state)
+
+            # Then: 错误应该被捕获
+            assert result["current_step"] == "research_failed"
+            assert result["error_message"] is not None
+            assert "网络错误" in result["error_message"]
+            assert result["report_path"] is None
+        finally:
+            # Restore original
+            f1_learning_research.research_single_tool = original_tool
 
 
 class TestResearchConfirmationNode:
