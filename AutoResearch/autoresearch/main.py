@@ -1,14 +1,14 @@
 """
-AutoResearch - 自动化研究应用
-使用 DeepSeek API 进行智能化的主题研究
+AutoResearch 主程序 (V2)
+强化置信度和学术规范性
 """
 import argparse
 import sys
 from pathlib import Path
 
 from .config import Config, RESEARCH_TEMPLATES
-from .researcher import DeepSeekResearcher, SearchQuery
-from .reporter import ReportGenerator
+from .researcher_v2 import DeepSeekResearcher, SearchQuery, Source
+from .reporter_v2 import ReportGenerator
 from .planner import TaskPlanner, ResearchPlan
 
 
@@ -17,9 +17,9 @@ def print_banner():
     banner = """
     ╔════════════════════════════════════════════════════════════╗
     ║                                                            ║
-    ║          AutoResearch  智能自动化研究工具                 ║
+    ║          AutoResearch V2  智能自动化研究工具               ║
     ║                                                            ║
-    ║          基于 DeepSeek V4-Pro + WebSearch                 ║
+    ║       基于 DeepSeek V4-Pro + WebSearch + 置信度强化        ║
     ║                                                            ║
     ╚════════════════════════════════════════════════════════════╝
     """
@@ -48,6 +48,40 @@ def validate_config():
         return False
 
 
+def execute_research_plan(plan: ResearchPlan):
+    """执行研究计划"""
+    researcher = DeepSeekResearcher()
+    reporter = ReportGenerator()
+
+    # 根据计划模式执行研究
+    if plan.mode == "single":
+        result = researcher.search(SearchQuery(query=plan.topic, depth=plan.depth))
+        filepath = reporter.generate_single_report(result, plan.research_type)
+        print_report_summary(filepath)
+
+    elif plan.mode == "deep":
+        results = researcher.research_deep(plan.topic, plan.aspects, plan.depth)
+        filepath = reporter.generate_comprehensive_report(
+            topic=plan.topic,
+            results=results,
+            research_type=plan.research_type,
+            aspects=plan.aspects
+        )
+        print_report_summary(filepath)
+
+    elif plan.mode == "interactive":
+        results = []
+        for result in researcher.research_iterative(plan.topic, plan.aspects):
+            results.append(result)
+        filepath = reporter.generate_comprehensive_report(
+            topic=plan.topic,
+            results=results,
+            research_type=plan.research_type,
+            aspects=plan.aspects
+        )
+        print_report_summary(filepath)
+
+
 def research_single(topic: str, research_type: str = "通用", depth: str = "comprehensive"):
     """单次研究模式"""
     print(f"\n🎯 研究主题: {topic}")
@@ -59,7 +93,8 @@ def research_single(topic: str, research_type: str = "通用", depth: str = "com
 
     query = SearchQuery(
         query=topic,
-        depth=depth
+        depth=depth,
+        require_sources=True
     )
 
     result = researcher.search(query)
@@ -141,7 +176,10 @@ def research_questions(topic: str, questions: list, research_type: str = "通用
         print(f"问题 {i}/{len(questions)}: {question}")
         print(f"{'='*60}")
 
-        result = researcher.search(SearchQuery(query=f"{topic}: {question}"))
+        result = researcher.search(SearchQuery(
+            query=f"{topic}: {question}",
+            require_sources=True
+        ))
         results.append(result)
 
     filepath = reporter.generate_comprehensive_report(
@@ -169,52 +207,15 @@ def print_report_summary(filepath: str):
     print()
 
 
-def execute_research_plan(plan: ResearchPlan):
-    """执行研究计划"""
-    researcher = DeepSeekResearcher()
-    reporter = ReportGenerator()
-
-    # 根据计划模式执行研究
-    if plan.mode == "single":
-        result = researcher.search(SearchQuery(query=plan.topic, depth=plan.depth))
-        filepath = reporter.generate_single_report(result, plan.research_type)
-        print_report_summary(filepath)
-
-    elif plan.mode == "deep":
-        results = researcher.research_deep(plan.topic, plan.aspects, plan.depth)
-        filepath = reporter.generate_comprehensive_report(
-            topic=plan.topic,
-            results=results,
-            research_type=plan.research_type,
-            aspects=plan.aspects
-        )
-        print_report_summary(filepath)
-
-    elif plan.mode == "interactive":
-        results = []
-        for result in researcher.research_iterative(plan.topic, plan.aspects):
-            results.append(result)
-        filepath = reporter.generate_comprehensive_report(
-            topic=plan.topic,
-            results=results,
-            research_type=plan.research_type,
-            aspects=plan.aspects
-        )
-        print_report_summary(filepath)
-
-
 def main():
     """主入口"""
     parser = argparse.ArgumentParser(
-        description="AutoResearch - 基于 DeepSeek 的自动化研究工具",
+        description="AutoResearch V2 - 强化置信度的自动化研究工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  # 自然语言模式 (自动分析)
+  # 自然语言模式 (自动分析，强化来源追踪)
   python -m autoresearch "帮我调研 RAG 技术的最新进展"
-
-  # 单次研究
-  python -m autoresearch "RAG 技术调研" --mode single
 
   # 深度研究
   python -m autoresearch "大模型微调" --mode deep --type 技术
@@ -227,6 +228,9 @@ def main():
 
   # 列出研究类型
   python -m autoresearch --list-types
+
+  # 使用 V2 版本 (强化置信度)
+  python -m autoresearch_v2 "研究主题"
         """
     )
 
@@ -241,6 +245,7 @@ def main():
     parser.add_argument("--list-types", action="store_true", help="列出所有研究类型")
     parser.add_argument("--config", action="store_true", help="显示当前配置")
     parser.add_argument("--no-confirm", action="store_true", help="跳过确认直接执行")
+    parser.add_argument("--v2", action="store_true", help="使用 V2 版本 (强化置信度)")
 
     args = parser.parse_args()
 

@@ -1,8 +1,8 @@
 """
-AutoResearch 主入口
-支持 python -m autoresearch 运行方式
+AutoResearch V2 主入口
+支持强化置信度的研究
 """
-from .main import main
+from .main_v2 import main
 
 if __name__ == "__main__":
     main()

@@ -1,12 +1,13 @@
-# Review System Skills
+# ComindFlow
 
-基于 Claude Skills 的人机协同学术复习系统，通过多阶段工作流实现系统化学习。
+基于 Claude Skills 的人机协同学术复习与知识管理系统，通过多阶段工作流实现系统化学习。
 
-![Architecture](Review%20System%20Skills%20Architecture.png)
+![Architecture](ComindFlow%20Architecture.png)
 
 ## 📋 目录
 
 - [项目概述](#项目概述)
+- [核心理念](#核心理念)
 - [系统架构](#系统架构)
 - [核心技能](#核心技能)
 - [扩展功能](#扩展功能)
@@ -17,7 +18,9 @@
 
 ## 🎯 项目概述
 
-Review System Skills 是一套为学术研究、写作和复习设计的 Claude Skills 工具集，支持：
+**ComindFlow** 是一套为学术研究、写作和知识管理设计的 Claude Skills 工具集，强调人机协同的思维流动（Mind + Flow）。
+
+### 核心能力
 
 **学习复习**：
 - 📄 **文档转换** - 自动将 PDF/DOCX 转换为 Markdown
@@ -36,6 +39,14 @@ Review System Skills 是一套为学术研究、写作和复习设计的 Claude 
 - 🔍 **智能研究** - AutoResearch 自动化文献/技术调研
 - 📅 **日程管理** - ima-schedule-agent 任务/习惯/日记管理
 - 🛠️ **技能创作** - write-a-skill 快速创建新技能
+
+## 💡 核心理念
+
+**ComindFlow** = **Companion**（陪伴） + **Mind**（思维） + **Flow**（心流）
+
+- **Companion** - AI 作为学习伙伴，而非简单的工具
+- **Mind** - 关注思维过程的深度理解，而非知识点的死记硬背
+- **Flow** - 保持学习状态的心流，支持跨会话的连续性
 
 ## 🏗️ 系统架构
 
@@ -195,22 +206,28 @@ Review System Skills 是一套为学术研究、写作和复习设计的 Claude 
 ## 🔧 扩展功能
 
 ### AutoResearch
-**智能自动化研究工具** - 基于 DeepSeek API + WebSearch 的学术/技术调研
+**智能自动化研究工具** - 基于 DeepSeek V4-Pro + WebSearch 的学术/技术调研
 
 ```bash
-# 使用 V2 强化版（推荐）
-python -m autoresearch_v2 "Agent 技能和工作流优化研究"
+# 基础用法
+python -m autoresearch "RAG 技术调研"
 
-# 深度技术调研
-python -m autoresearch_v2 "RAG 技术调研" --mode deep --type 技术
+# 深度研究（多维度）
+python -m autoresearch "大模型微调" --mode deep --type 技术
+
+# 自然语言模式（自动分析）
+python -m autoresearch "帮我调研一下 Agent 技能和工作流优化的最新研究"
 ```
 
 **核心特性**：
-- 🔍 **智能搜索** - 自动规划多维度搜索策略
-- 📚 **学术规范** - 完整的参考文献格式，arXiv 编号可追溯
-- 🎯 **置信度标注** - 高/中/低置信度来源分类
-- 📊 **结构化报告** - 自动生成带引用的综合研究报告
-- 📖 **质量保证** - 内置研究方法论文档和质量检查清单
+- 🔍 **智能搜索** - 利用 DeepSeek WebSearch 获取最新信息
+- 📊 **多种研究模式** - auto/single/deep/interactive
+- 📝 **自动报告** - 生成结构化 Markdown 研究报告
+- 🤖 **自然语言处理** - 自动分析需求，生成研究计划
+- 📚 **学术规范** - 完整参考文献格式，arXiv 编号可追溯
+- 🔗 **来源追踪** - 每个观点都有 arXiv 编号和链接
+- 🎯 **置信度标注** - 区分高/中/低置信度来源
+- 📖 **质量保证** - 内置 METHODOLOGY.md 和 QUALITY_CHECKLIST.md
 
 **适用场景**：论文调研、技术趋势分析、竞品研究、学术文献综述
 
@@ -218,8 +235,8 @@ python -m autoresearch_v2 "RAG 技术调研" --mode deep --type 技术
 **智能复习助手** - 基于 SM2 间隔重复算法的学习系统
 
 ```bash
-# 启动复习界面（Python 应用）
-python -m review_agent.ui.menu
+# 启动复习界面
+python -m review_agent
 ```
 
 **核心特性**：
@@ -243,12 +260,26 @@ python -m review_agent.ui.menu
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/review_system_skills.git
-cd review_system_skills
+git clone https://github.com/Joeowo/ComindFlow.git
+cd ComindFlow
 
 # 复制技能到 Claude Skills 目录
 # Windows: C:\Users\[username]\.claude\skills\
 # macOS/Linux: ~/.claude/skills/
+```
+
+### 安装扩展功能依赖
+
+```bash
+# AutoResearch
+cd AutoResearch
+pip install -r requirements.txt
+# 配置 .env 文件（参考 README.md）
+
+# review_agent
+cd review_agent
+pip install -r requirements.txt
+# 配置 .env 文件（参考 .env.example）
 ```
 
 ### 开始第一次复习
@@ -325,41 +356,70 @@ Day 3: 同一 Session
 ### 项目根目录
 
 ```
-review_system_skills/
-├── skills/                    # Claude Skills 目录
-│   ├── review-system/         # 编排系统
-│   ├── review-session/       # 会话初始化
-│   ├── continue-task/        # 断点恢复
-│   ├── grill-me/             # AI 考你
-│   ├── grill-you/            # 你考 AI
-│   ├── advance-task/         # 进度保存
+ComindFlow/
+├── skills/                      # Claude Skills 目录
+│   ├── review-system/           # 编排系统
+│   ├── review-session/         # 会话初始化
+│   ├── continue-task/          # 断点恢复
+│   ├── grill-me/               # AI 考你
+│   ├── grill-you/              # 你考 AI
+│   ├── advance-task/           # 进度保存
 │   ├── academic-coevolution-main/  # 学术协作主控
 │   ├── academic-writing-assist/    # 学术写作助手
 │   ├── ima-schedule-agent/         # 日程管理助手
-│   └── write-a-skill/        # 技能创作工具
-├── AutoResearch/             # 智能研究工具
-│   ├── autoresearch_v2/      # V2 强化版研究模块
-│   │   ├── researcher_v2.py  # 核心研究器
-│   │   ├── reporter_v2.py     # 报告生成器
-│   │   └── planner.py         # 研究规划器
-│   ├── output/reports/        # 研究报告输出
-│   ├── METHODOLOGY.md         # 研究方法论
-│   └── QUALITY_CHECKLIST.md   # 质量检查清单
-├── review_agent/             # 智能复习助手
-│   ├── core/                  # 核心逻辑（SM2 调度器、评估器）
-│   ├── services/              # 业务服务（问答、知识查询）
-│   ├── models/                # 数据模型
-│   ├── repositories/          # 数据仓库
-│   ├── ui/                    # 用户界面（菜单、测验）
-│   └── data/                  # 数据存储
-├── README.md                 # 本文件
-└── Review System Skills Architecture.png  # 架构图
+│   └── write-a-skill/          # 技能创作工具
+├── AutoResearch/               # 智能研究工具
+│   ├── autoresearch/           # 研究模块
+│   │   ├── __init__.py        # 包入口
+│   │   ├── __main__.py        # CLI 入口
+│   │   ├── main.py            # 主程序
+│   │   ├── config.py          # 配置管理
+│   │   ├── planner.py         # 任务规划器
+│   │   ├── researcher.py      # 核心研究模块
+│   │   ├── reporter.py        # 报告生成器
+│   │   ├── METHODOLOGY.md     # 研究方法论
+│   │   └── QUALITY_CHECKLIST.md  # 质量检查清单
+│   ├── output/
+│   │   └── reports/           # 研究报告输出
+│   ├── requirements.txt        # 依赖
+│   ├── test_features.py        # 功能测试
+│   ├── test_research.py        # 研究测试
+│   └── README.md               # AutoResearch 说明
+├── review_agent/               # 智能复习助手
+│   ├── core/                   # 核心逻辑
+│   │   ├── __init__.py
+│   │   ├── sm2_scheduler.py   # SM2 调度器
+│   │   ├── answer_evaluator.py # 答案评估器
+│   │   ├── question_generator.py # 问题生成器
+│   │   ├── question_extractor.py # 问题提取器
+│   │   └── knowledge_extractor.py # 知识提取器
+│   ├── services/               # 业务服务
+│   │   ├── llm_service.py     # LLM 服务
+│   │   ├── qa_assistant.py    # 问答助手
+│   │   ├── knowledge_query.py  # 知识查询
+│   │   ├── question_dedup.py  # 问题去重
+│   │   ├── question_extraction_service.py # 问题提取服务
+│   │   └── wrong_question_service.py # 错题服务
+│   ├── models/                 # 数据模型
+│   ├── repositories/           # 数据仓库
+│   ├── ui/                     # 用户界面
+│   │   ├── menu.py            # 主菜单
+│   │   └── quiz.py            # 测验界面
+│   ├── utils/                  # 工具函数
+│   ├── data/                   # 数据存储
+│   ├── config.py              # 配置
+│   ├── main.py                # 入口文件
+│   ├── requirements.txt        # 依赖
+│   └── .env.example           # 环境变量示例
+├── README.md                   # 本文件
+├── LICENSE                     # MIT 许可证
+└── ComindFlow Architecture.png  # 架构图
 ```
 
 ### 技能目录
 
 ```
-review_system_skills/
+skills/
 ├── advance-task/
 │   ├── SKILL.md        # 技能说明
 │   └── REFERENCE.md    # 详细参考
@@ -387,6 +447,7 @@ review_system_skills/
 ├── ima-schedule-agent/
 │   ├── SKILL.md        # 日程管理主技能
 │   ├── README.md       # 项目说明
+│   ├── LICENSE         # 许可证
 │   └── references/     # 各模块详细文档
 │       ├── month-task.md
 │       ├── week-task.md
@@ -473,6 +534,27 @@ _Avoid_: 宽松政策、紧缩政策（使用具体工具名）
 - "政策工具" 曾同时指代利率和准备金率 — 已明确分开定义。
 ```
 
+### AutoResearch 配置
+
+在 `AutoResearch/.env` 文件中配置：
+
+```env
+apikey=sk-your-deepseek-api-key
+base=https://api.deepseek.com
+model=deepseek-v4-pro
+```
+
+### review_agent 配置
+
+在 `review_agent/.env` 文件中配置：
+
+```env
+# 复制 .env.example 并填入实际值
+OPENAI_API_KEY=sk-your-api-key
+OPENAI_BASE_URL=https://api.deepseek.com
+MODEL_NAME=deepseek-chat
+```
+
 ## 🛠️ 故障恢复
 
 | 症状 | 原因 | 解决 |
@@ -481,6 +563,8 @@ _Avoid_: 宽松政策、紧缩政策（使用具体工具名）
 | handoff.md 缺失 | 用户未调用 `/advance-task` | 读取 Task.md 推断 |
 | sources/ 为空 | 转换脚本未运行 | 检查 pypdf/python-docx 安装 |
 | CONTEXT.md 丢失 | 意外删除 | 从 handoff.md 重建 |
+| AutoResearch API 错误 | .env 配置错误 | 检查 API Key 和 base URL |
+| review_agent 启动失败 | 缺少依赖 | 运行 `pip install -r requirements.txt` |
 
 ## 📝 许可证
 
@@ -493,4 +577,8 @@ MIT License
 ## 📮 联系方式
 
 - 作者: Joeowo
-- 项目主页: https://github.com/Joeowo/Review-System-Skills
+- 项目主页: https://github.com/Joeowo/ComindFlow
+
+---
+
+**ComindFlow** - 让思维流动，让知识生长。
