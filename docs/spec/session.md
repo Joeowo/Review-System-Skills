@@ -118,19 +118,48 @@ agent_framework/
 
 ## 下一步
 
-### 当前状态：暂停验证 ⏸️
+### 🎯 实现 TODO 任务（当前目标）
 
-**决定**: 先验证现有功能，再继续 S4 开发
+**决定**: 在继续 S4 之前，先完成现有代码中的 TODO 项
 
-**验证计划**:
-1. F1 Workflow 端到端手动测试
-2. F2 Workflow 端到端手动测试
-3. 与现有 skills 集成验证
-4. 性能和稳定性测试
+#### 发现的 TODO 项
+
+| 序号 | 文件 | 函数 | 对应 Spec 任务 | 优先级 | 预计时间 |
+|------|------|------|----------------|--------|----------|
+| 1 | `core/state.py` | `sync_to_persistence()` | S1 Task 3 | 高 | 5h |
+| 2 | `f1_learning_research.py` | `extract_concepts_from_report()` | S3 Task 3 | 高 | 3h |
+| 3 | `f1_learning_research.py` | `initialize_task_md()` | S3 Task 4 | 高 | 3h |
+| 4 | `f1_learning_research.py` | `should_continue_research()` | 内置逻辑 | 中 | 2h |
+| 5 | `f1_learning_research.py` | `check_mastery()` | 内置逻辑 | 中 | 2h |
+
+**总计**: 5 个 TODO，预计 **15 小时**
+
+#### 实施计划
+
+**阶段 1: F1 核心功能** (6 小时)
+- ✅ Task 1: 实现 `extract_concepts_from_report()` (3h)
+- ✅ Task 2: 实现 `initialize_task_md()` (3h)
+
+**阶段 2: S1 基础设施** (5 小时)
+- ✅ Task 3: 实现 `sync_to_persistence()` (5h)
+
+**阶段 3: 条件边逻辑** (4 小时)
+- ✅ Task 4: 实现 `should_continue_research()` (2h)
+- ✅ Task 5: 实现 `check_mastery()` (2h)
+
+#### 验收标准
+
+每个 TODO 完成后需要：
+- [ ] 实现功能代码
+- [ ] 编写单元测试
+- [ ] 更新相关文档
+- [ ] 运行完整测试套件
 
 ---
 
-### 待实现：S4 学术写作复习 Workflow
+### ⏸️ 暂缓：S4 学术写作复习 Workflow
+
+**待实现**:
 
 #### F3: 学术写作全流程
 - **澄清阶段**: clarify_topic, clarify_confirmation
@@ -142,6 +171,8 @@ agent_framework/
 - extract_knowledge, sm2_schedule, generate_plan
 
 **预估 LOC**: ~950
+
+**注意**: S4 将在所有 TODO 完成后再开始
 
 ---
 
