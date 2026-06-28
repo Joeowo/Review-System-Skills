@@ -191,6 +191,150 @@ def error_context() -> Dict[str, Any]:
 
 
 # =============================================================================
+# 配置和 LLM fixtures
+# =============================================================================
+
+@pytest.fixture
+def mock_config(monkeypatch):
+    """Mock 配置 fixture
+
+    设置测试环境变量并返回配置实例
+    """
+    monkeypatch.setenv("LLM_API_KEY", "test_key")
+    monkeypatch.setenv("LLM_MODEL", "gpt-4")
+    monkeypatch.setenv("LLM_BASE_URL", "https://api.test.com")
+    monkeypatch.setenv("CHECKPOINT_DB_PATH", ":memory:")
+
+    # 延迟导入避免循环依赖
+    from config.settings import AgentConfig
+
+    try:
+        return AgentConfig()
+    except Exception:
+        # 如果配置加载失败，返回一个简单的 mock
+        from types import SimpleNamespace
+        return SimpleNamespace(
+            llm=SimpleNamespace(
+                api_key="test_key",
+                model="gpt-4",
+                base_url="https://api.test.com"
+            ),
+            checkpoint=SimpleNamespace(
+                db_path=":memory:",
+                cleanup_days=30
+            )
+        )
+
+
+# =============================================================================
+# Checkpoint fixtures
+# =============================================================================
+
+@pytest.fixture
+def temp_checkpoint_db(tmp_path: Path) -> str:
+    """临时 checkpoint 数据库 fixture
+
+    提供临时 SQLite 数据库用于 checkpoint 测试
+    """
+    db_path = tmp_path / "test_checkpoints.db"
+    return str(db_path)
+
+
+@pytest.fixture
+def temp_checkpointer(tmp_path: Path):
+    """临时 checkpointer fixture
+
+    提供用于测试的临时 checkpointer 实例
+    """
+    from langgraph.checkpoint.sqlite import SqliteSaver
+
+    db_path = tmp_path / "test_checkpoints.db"
+    # 使用 SqliteSaver 而不是 from_conn_string
+    return SqliteSaver(str(db_path))
+
+
+# =============================================================================
+# Workflow fixtures
+# =============================================================================
+
+@pytest.fixture
+def sample_workflow():
+    """示例 workflow fixture
+
+    提供一个简单的 workflow 用于测试
+    """
+    from langgraph.graph import StateGraph
+    from core.state import AgentState
+
+    # 创建一个简单的测试 workflow
+    workflow = StateGraph(AgentState)
+
+    def test_node(state: AgentState):
+        state["current_step"] = "test_step"
+        return state
+
+    workflow.add_node("test_node", test_node)
+    workflow.set_entry_point("test_node")
+    workflow.set_finish_point("test_node")
+
+    return workflow
+
+
+# =============================================================================
+# LLM fixtures
+# =============================================================================
+
+@pytest.fixture
+def sample_llm_response():
+    """示例 LLM 响应 fixture
+
+    提供一个模拟的 LLM 响应对象
+    """
+    from types import SimpleNamespace
+
+    response = SimpleNamespace()
+    response.content = [
+        {"type": "text", "text": "这是测试响应内容"}
+    ]
+    response.tool_calls = []
+
+    return response
+
+
+# =============================================================================
+# State fixtures (增强版)
+# =============================================================================
+
+@pytest.fixture
+def mock_state():
+    """Mock 状态 fixture
+
+    提供一个完整的测试状态字典
+    """
+    from datetime import datetime
+
+    return {
+        # 执行层状态
+        "current_step": "init",
+        "tool_results": {},
+        "retry_count": 0,
+        "error_message": None,
+
+        # 持久层引用
+        "session_path": "/tmp/test_session",
+        "current_task_id": "task-1",
+
+        # 缓存层状态
+        "cached_terminology": {},
+        "cached_task_progress": {},
+
+        # 元数据
+        "workflow_name": "test_workflow",
+        "start_time": datetime.now().isoformat(),
+    }
+
+
+# =============================================================================
 # Pytest hooks
 # =============================================================================
 
