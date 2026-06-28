@@ -9,6 +9,7 @@
 - [项目概述](#项目概述)
 - [系统架构](#系统架构)
 - [核心技能](#核心技能)
+- [扩展功能](#扩展功能)
 - [快速开始](#快速开始)
 - [工作流程](#工作流程)
 - [文件结构](#文件结构)
@@ -16,14 +17,25 @@
 
 ## 🎯 项目概述
 
-Review System Skills 是一套为学术复习和考试准备设计的 Claude Skills，支持：
+Review System Skills 是一套为学术研究、写作和复习设计的 Claude Skills 工具集，支持：
 
+**学习复习**：
 - 📄 **文档转换** - 自动将 PDF/DOCX 转换为 Markdown
 - 📝 **任务分解** - 按章节/主题智能分解学习任务
 - 💬 **交互式问答** - 双向 Q&A 强化理解（AI考你 + 你考AI）
 - 🔄 **断点恢复** - 通过 handoff.md 支持跨天学习
 - 📚 **术语管理** - CONTEXT.md 统一术语定义
 - ✅ **进度跟踪** - Task.md 记录每个任务的学习状态
+- 🧠 **间隔复习** - review_agent SM2 算法辅助记忆
+
+**学术写作**：
+- 🎓 **协作写作** - academic-coevolution-main 人机协同学术写作
+- ✍️ **写作助手** - academic-writing-assist 结构化表达优化
+
+**效率工具**：
+- 🔍 **智能研究** - AutoResearch 自动化文献/技术调研
+- 📅 **日程管理** - ima-schedule-agent 任务/习惯/日记管理
+- 🛠️ **技能创作** - write-a-skill 快速创建新技能
 
 ## 🏗️ 系统架构
 
@@ -125,6 +137,100 @@ Review System Skills 是一套为学术复习和考试准备设计的 Claude Ski
 /advance-task Task 3 已完成第2轮，理解良好
 ```
 
+### 7. academic-coevolution-main
+**学术协作主控** - AI 与人类协作学术写作的全流程编排
+
+```bash
+/academic-coevolution-main
+```
+
+**核心特性**：
+- 🔄 **三阶段流程** - Clarification → Research → Writing
+- 🎯 **人机协同** - 人类负责核心论点，AI 负责表达优化
+- 📚 **技能编排** - 协调 grill-me、auto-research、writing-assist 等
+
+**适用场景**：学术论文写作、研究报告撰写
+
+### 8. academic-writing-assist
+**学术写作助手** - 人类主导、AI 辅助的协作写作
+
+```bash
+"帮我结构化引言部分"
+"重写这段，使其更具学术风格"
+"检查论点是否得到充分支持"
+```
+
+**核心特性**：
+- ✍️ **结构模板** - Introduction、Literature Review、Results、Conclusion
+- 🎨 **表达优化** - 学术语气、逻辑流畅性、语言精炼
+- 🔁 **迭代改进** - 多轮协作，人类最终决策权
+
+### 9. ima-schedule-agent (日程管理助手)
+**个人日程管理** - 基于 IMA notes API 的任务、习惯、日记管理
+
+```bash
+"今天有什么任务？"
+"添加一个会议到本周计划"
+"写今天的日记"
+```
+
+**核心特性**：
+- 📅 **多级任务** - 月/周/日任务分层管理
+- 📊 **习惯追踪** - 记录任务执行数据和用户行为模式
+- 📝 **智能日记** - 陪伴者视角的日记编写
+- 🔄 **向下同步** - 月任务可拆解到周/日
+
+### 10. write-a-skill
+**技能创作工具** - 创建新的 Claude Skills
+
+```bash
+/write-a-skill
+```
+
+**核心特性**：
+- 📝 **结构模板** - SKILL.md、REFERENCE.md、EXAMPLES.md
+- 🎯 **最佳实践** - 描述规范、渐进式披露
+- 🛠️ **脚本支持** - 确定性操作的实用脚本
+
+## 🔧 扩展功能
+
+### AutoResearch
+**智能自动化研究工具** - 基于 DeepSeek API + WebSearch 的学术/技术调研
+
+```bash
+# 使用 V2 强化版（推荐）
+python -m autoresearch_v2 "Agent 技能和工作流优化研究"
+
+# 深度技术调研
+python -m autoresearch_v2 "RAG 技术调研" --mode deep --type 技术
+```
+
+**核心特性**：
+- 🔍 **智能搜索** - 自动规划多维度搜索策略
+- 📚 **学术规范** - 完整的参考文献格式，arXiv 编号可追溯
+- 🎯 **置信度标注** - 高/中/低置信度来源分类
+- 📊 **结构化报告** - 自动生成带引用的综合研究报告
+- 📖 **质量保证** - 内置研究方法论文档和质量检查清单
+
+**适用场景**：论文调研、技术趋势分析、竞品研究、学术文献综述
+
+### review_agent
+**智能复习助手** - 基于 SM2 间隔重复算法的学习系统
+
+```bash
+# 启动复习界面（Python 应用）
+python -m review_agent.ui.menu
+```
+
+**核心特性**：
+- 🧠 **SM2 算法** - 科学的间隔重复记忆调度
+- 📝 **智能出题** - 自动从学习资料提取问题
+- ✅ **答案评估** - AI 评估回答质量
+- 📊 **进度跟踪** - 可视化学习统计
+- 🔁 **错题管理** - 自动收集和重点复习
+
+**适用场景**：长期记忆保持、考试准备、知识点巩固
+
 ## 🚀 快速开始
 
 ### 前置要求
@@ -216,6 +322,40 @@ Day 3: 同一 Session
 
 ## 📁 文件结构
 
+### 项目根目录
+
+```
+review_system_skills/
+├── skills/                    # Claude Skills 目录
+│   ├── review-system/         # 编排系统
+│   ├── review-session/       # 会话初始化
+│   ├── continue-task/        # 断点恢复
+│   ├── grill-me/             # AI 考你
+│   ├── grill-you/            # 你考 AI
+│   ├── advance-task/         # 进度保存
+│   ├── academic-coevolution-main/  # 学术协作主控
+│   ├── academic-writing-assist/    # 学术写作助手
+│   ├── ima-schedule-agent/         # 日程管理助手
+│   └── write-a-skill/        # 技能创作工具
+├── AutoResearch/             # 智能研究工具
+│   ├── autoresearch_v2/      # V2 强化版研究模块
+│   │   ├── researcher_v2.py  # 核心研究器
+│   │   ├── reporter_v2.py     # 报告生成器
+│   │   └── planner.py         # 研究规划器
+│   ├── output/reports/        # 研究报告输出
+│   ├── METHODOLOGY.md         # 研究方法论
+│   └── QUALITY_CHECKLIST.md   # 质量检查清单
+├── review_agent/             # 智能复习助手
+│   ├── core/                  # 核心逻辑（SM2 调度器、评估器）
+│   ├── services/              # 业务服务（问答、知识查询）
+│   ├── models/                # 数据模型
+│   ├── repositories/          # 数据仓库
+│   ├── ui/                    # 用户界面（菜单、测验）
+│   └── data/                  # 数据存储
+├── README.md                 # 本文件
+└── Review System Skills Architecture.png  # 架构图
+```
+
 ### 技能目录
 
 ```
@@ -237,9 +377,24 @@ review_system_skills/
 │   ├── REFERENCE.md
 │   └── scripts/
 │       └── convert_docs.py
-└── review-system/
-    ├── SKILL.md
-    └── REFERENCE.md
+├── review-system/
+│   ├── SKILL.md
+│   └── REFERENCE.md
+├── academic-coevolution-main/
+│   └── SKILL.md        # 协作学术写作主控
+├── academic-writing-assist/
+│   └── SKILL.md        # 人类主导的学术写作助手
+├── ima-schedule-agent/
+│   ├── SKILL.md        # 日程管理主技能
+│   ├── README.md       # 项目说明
+│   └── references/     # 各模块详细文档
+│       ├── month-task.md
+│       ├── week-task.md
+│       ├── day-task.md
+│       ├── habit.md
+│       └── diary.md
+└── write-a-skill/
+    └── SKILL.md        # 创建新技能的指南
 ```
 
 ### Session 目录

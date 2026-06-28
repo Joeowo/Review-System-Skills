@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+.pytest_cache/
+
+# User data only (generated)
+data/
+log/
+
+# Environment variables with sensitive data
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
