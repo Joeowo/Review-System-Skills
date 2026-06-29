@@ -4,15 +4,20 @@
 使用 Pydantic Settings 实现类型安全的配置管理
 """
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field, field_validator, ValidationError
+from pydantic import Field, field_validator
 from typing import Optional, Literal
 
 
 class LLMConfig(BaseSettings):
     """LLM 配置"""
-    model_config = SettingsConfigDict(env_prefix="LLM_")
+    model_config = SettingsConfigDict(
+        env_prefix="LLM_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
-    api_key: str = Field(default="", validation_alias="LLM_API_KEY")
+    api_key: str = Field(default="")
     base_url: str = "https://api.openai.com/v1"
     model: str = "gpt-4"
     temperature: float = Field(default=0.7, ge=0.0, le=2.0)
@@ -21,7 +26,12 @@ class LLMConfig(BaseSettings):
 
 class CheckpointConfig(BaseSettings):
     """Checkpoint 配置"""
-    model_config = SettingsConfigDict(env_prefix="CHECKPOINT_")
+    model_config = SettingsConfigDict(
+        env_prefix="CHECKPOINT_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
     db_path: str = "agent_framework/checkpoints.db"
     cleanup_days: int = Field(default=30, ge=1)
@@ -29,7 +39,12 @@ class CheckpointConfig(BaseSettings):
 
 class LogConfig(BaseSettings):
     """日志配置"""
-    model_config = SettingsConfigDict(env_prefix="LOG_")
+    model_config = SettingsConfigDict(
+        env_prefix="LOG_",
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
     level: str = "INFO"
     file_path: Optional[str] = "agent_framework/logs/agent.log"
@@ -42,7 +57,8 @@ class AgentConfig(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
-        env_prefix="AGENT_"
+        env_prefix="AGENT_",
+        extra="ignore"
     )
 
     # 嵌套配置使用 DefaultFactory
